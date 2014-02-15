@@ -5,6 +5,11 @@
     "minimum_chrome_version": "20.0",
     "description": "Adds Firebug like XHR console view details to Chrome",
     "devtools_page": "devtools.html",
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ]
+    },
     // "icons": {
     //     "16": "images/icon16.png",
     //     "48": "images/icon48.png",
