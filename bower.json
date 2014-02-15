@@ -1,0 +1,12 @@
+{
+  "name": "Chrome XHR Inspector",
+  "description": "Adds Firebug like XHR console view details to Chrome",
+  "authors": [
+    {
+      "name": "Wei Kin Huang"
+    }
+  ],
+  "dependencies": {
+    "q" : "~1.0.0"
+  }
+}

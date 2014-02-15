@@ -1,0 +1,17 @@
+{
+  "name": "chrome-xhr-inspector",
+  "description": "Adds Firebug like XHR console view details to Chrome",
+  "authors": [
+    {
+      "name": "Wei Kin Huang"
+    }
+  ],
+  "noBinLinks": true,
+  "devDependencies": {
+	"grunt": ">=0.4.2",
+    "grunt-contrib-jshint": ">=0.6.4",
+    "grunt-contrib-watch": ">=0.5.0",
+    "grunt-jscs-checker": ">=0.3.2",
+    "bower": "~1.2.8"
+  }
+}
