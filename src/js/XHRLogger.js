@@ -95,12 +95,9 @@ XHRLogger.prototype.logToConsole = function(content, encoding) {
 		// group 2
 
 		// group 2
-		if (this.har.response.content.mimeType.match(/json/)) {
+		if (this.har.response.content.mimeType.match(/json|javascript/)) {
 			Console.group("JSON");
-			try {
-				Console.log(JSON.parse(content));
-			} catch (e) {
-			}
+			this.processJSON(content);
 			Console.groupEnd();
 		}
 		// group 2
@@ -122,6 +119,38 @@ XHRLogger.prototype.log = function() {
 };
 
 /**
+ * Parse and renders the request in the console
+ */
+XHRLogger.prototype.processJSON = function(content) {
+	var cleanContent;
+	// plain json
+	try {
+		Console.log(JSON.parse(content));
+		return;
+	} catch (e) {
+	}
+	// jsonp
+	try {
+		cleanContent = /^\s*([^{]+)\(\s*(\{.+\})\s*\)\s*;?\s*$/.exec(content);
+		if (cleanContent) {
+			Console.log(cleanContent[1] + "(", JSON.parse(cleanContent[2]), ")");
+			return;
+		}
+	} catch (e) {
+	}
+	// weird jsonp hack (fb)
+	try {
+		cleanContent = content.replace(/^\s*for\s*\(\s*;\s*;\s*\)\s*(\{\s*\}\s*)?;\s*/, "");
+		if (cleanContent) {
+			Console.log("for (;;); ", JSON.parse(cleanContent));
+			return;
+		}
+		return;
+	} catch (e) {
+	}
+};
+
+/**
  * Checks if the request looks like a XHR request
  *
  * @param {Request} request
@@ -129,17 +158,17 @@ XHRLogger.prototype.log = function() {
  * @todo This needs to be revised or allow selectable filter
  */
 XHRLogger.isXHR = function(request) {
-	if (request.request.url.match(/\.json(?:$|\?)/)) {
+	if (request.request.url.match(/\.json(?:$|\?)/i)) {
 		return true;
 	}
-	if (request.response.content.mimeType.match(/json/)) {
+	if (request.response.content.mimeType.match(/json/i)) {
 		return true;
 	}
 	if (request.request.headers.some(function(header) {
-		if (header.name === "X-Requested-With" && header.value === "XMLHttpRequest") {
+		if (header.name.toLowerCase() === "x-requested-with" && header.value.toLowerCase() === "xmlhttprequest") {
 			return true;
 		}
-		if (header.name === "Content-Type" && header.value === "application/x-www-form-urlencoded") {
+		if (header.name.toLowerCase() === "content-type" && header.value.toLowerCase() === "application/x-www-form-urlencoded") {
 			return true;
 		}
 		return false;
