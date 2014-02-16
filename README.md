@@ -31,12 +31,12 @@ Changelog
 
 References
 --------------------------------------
-[Extending Devtools](http://developer.chrome.com/extensions/devtools.html)
-[chrome.devtools.network](http://developer.chrome.com/extensions/devtools_network.html)
-[Sample Extensions](http://developer.chrome.com/extensions/samples.html#devtools.network)
-[Hosting](http://developer.chrome.com/extensions/hosting.html)
-[Packaging](http://developer.chrome.com/extensions/packaging.html)
-[AutoUpdate](http://developer.chrome.com/extensions/autoupdate.html)
+ - [Extending Devtools](http://developer.chrome.com/extensions/devtools.html)
+ - [chrome.devtools.network](http://developer.chrome.com/extensions/devtools_network.html)
+ - [Sample Extensions](http://developer.chrome.com/extensions/samples.html#devtools.network)
+ - [Hosting](http://developer.chrome.com/extensions/hosting.html)
+ - [Packaging](http://developer.chrome.com/extensions/packaging.html)
+ - [AutoUpdate](http://developer.chrome.com/extensions/autoupdate.html)
 
 About
 --------------------------------------
