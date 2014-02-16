@@ -1,5 +1,5 @@
+/* global XHRLogger */
+
 "use strict";
 
-chrome.devtools.network.onRequestFinished.addListener(function(request) {
-	console.log(request);
-});
+chrome.devtools.network.onRequestFinished.addListener(XHRLogger.listen);

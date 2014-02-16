@@ -2,46 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-function Console() {
-}
-
-Console.Type = {
-  LOG: "log",
-  DEBUG: "debug",
-  INFO: "info",
-  WARN: "warn",
-  ERROR: "error",
-  GROUP: "group",
-  GROUP_COLLAPSED: "groupCollapsed",
-  GROUP_END: "groupEnd"
-};
-
-Console.addMessage = function(type, format, args) {
-  chrome.extension.sendRequest({
-      command: "sendToConsole",
-      tabId: chrome.devtools.tabId,
-      args: escape(JSON.stringify(Array.prototype.slice.call(arguments, 0)))
-  });
-};
-
-// Generate Console output methods, i.e. Console.log(), Console.debug() etc.
-(function() {
-  var console_types = Object.getOwnPropertyNames(Console.Type);
-  for (var type = 0; type < console_types.length; ++type) {
-    var method_name = Console.Type[console_types[type]];
-    Console[method_name] = Console.addMessage.bind(Console, method_name);
-  }
-})();
+/* global Console */
+"use strict";
 
 function ChromeFirePHP() {
-};
+}
 
 ChromeFirePHP.handleFirePhpHeaders = function(har_entry) {
   var response_headers = har_entry.response.headers;
   var wf_header_map = {};
   var had_wf_headers = false;
+  var i;
 
-  for (var i = 0; i < response_headers.length; ++i) {
+  for (i = 0; i < response_headers.length; ++i) {
     var header = response_headers[i];
     if (/^X-Wf-/.test(header.name)) {
       wf_header_map[header.name] = header.value;
@@ -50,25 +23,29 @@ ChromeFirePHP.handleFirePhpHeaders = function(har_entry) {
   }
 
   var proto_header = wf_header_map["X-Wf-Protocol-1"];
-  if (!had_wf_headers || !this._checkProtoVersion(proto_header))
+  if (!had_wf_headers || !this._checkProtoVersion(proto_header)) {
     return;
+  }
 
   var message_objects = this._buildMessageObjects(wf_header_map);
   message_objects.sort(function(a, b) {
       var aFile = a.File || "";
       var bFile = b.File || "";
-      if (aFile !== bFile)
+      if (aFile !== bFile) {
         return aFile.localeCompare(bFile);
+      }
       var aLine = a.Line !== undefined ? a.Line : -1;
       var bLine = b.Line !== undefined ? b.Line : -1;
       return aLine - bLine;
   });
 
   var context = { pageRef: har_entry.pageref };
-  for (var i = 0; i < message_objects.length; ++i)
+  for (i = 0; i < message_objects.length; ++i) {
     this._processLogMessage(message_objects[i], context);
-  if (context.groupStarted)
+  }
+  if (context.groupStarted) {
     Console.groupEnd();
+  }
 };
 
 ChromeFirePHP._processLogMessage = function(message, context) {
@@ -109,20 +86,21 @@ ChromeFirePHP._processLogMessage = function(message, context) {
 
 ChromeFirePHP._buildMessageObjects = function(header_map)
 {
-  const normal_header_prefix = "X-Wf-1-1-1-";
+  var normal_header_prefix = "X-Wf-1-1-1-";
 
   return this._collectMessageObjectsForPrefix(header_map, normal_header_prefix);
 };
 
 ChromeFirePHP._collectMessageObjectsForPrefix = function(header_map, prefix) {
   var results = [];
-  const header_regexp = /(?:\d+)?\|(.+)/;
+  var header_regexp = /(?:\d+)?\|(.+)/;
   var json = "";
   for (var i = 1; ; ++i) {
     var name = prefix + i;
     var value = header_map[name];
-    if (!value)
+    if (!value) {
       break;
+    }
 
     var match = value.match(header_regexp);
     if (!match) {
@@ -131,8 +109,9 @@ ChromeFirePHP._collectMessageObjectsForPrefix = function(header_map, prefix) {
     }
     var json_part = match[1];
     json += json_part.substring(0, json_part.lastIndexOf("|"));
-    if (json_part.charAt(json_part.length - 1) === "\\")
+    if (json_part.charAt(json_part.length - 1) === "\\") {
       continue;
+    }
     try {
       var message = JSON.parse(json);
       results.push(message);
@@ -177,8 +156,9 @@ chrome.devtools.network.getHAR(function(result) {
     Console.warn("ChromeFirePHP suggests that you reload the page to track" +
         " FirePHP messages for all the requests");
   }
-  for (var i = 0; i < entries.length; ++i)
+  for (var i = 0; i < entries.length; ++i) {
     ChromeFirePHP.handleFirePhp_headers(entries[i]);
+  }
 
   chrome.devtools.network.onRequestFinished.addListener(
       ChromeFirePHP.handleFirePhpHeaders.bind(ChromeFirePHP));

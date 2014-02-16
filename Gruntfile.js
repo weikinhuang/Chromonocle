@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 				node : true,
 				browser : true,
 				quotmark : "double",
-				predef : [ "chrome" ]
+				predef : [ "chrome", "escape", "unescape" ]
 			}
 		},
 		test : {
