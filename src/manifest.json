@@ -4,6 +4,7 @@
     "version": "0.0.1",
     "minimum_chrome_version": "20.0",
     "description": "Adds Firebug like XHR console view details to Chrome",
+    // "update_url": "http://weikinhuang.github.io/chrome-xhr-inspector/dist/updates.xml",
     "devtools_page": "devtools.html",
     "background": {
         "scripts": [
