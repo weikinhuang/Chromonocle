@@ -25,6 +25,18 @@ $ bower update
 $ grunt
 ```
 
+To test on Chrome during development:
+```
+# Navigate to chrome://extensions
+# Check "Developer Mode" in upper right corner
+# Click "Load unpacked extension..."
+# Navigate to the src directory
+
+# When changes are made, Click "Reload (Ctrl+R)" on this extension
+# (Or use the "Extensions Reloader" extension)
+# Then close and repoen the Developer Tools
+```
+
 Changelog
 --------------------------------------
 
