@@ -4,6 +4,8 @@ Chrome XHR Inspector
 Chrome XHR Inspector adds expandable areas for XHR requests much like that in Firebug's console view.
 Skips a panel change where XHR request details can be seen inline in the Chrome console
 
+![Chrome XHR Inspector](https://github.com/weikinhuang/chrome-xhr-inspector/raw/master/img/screenshot.png)
+
 Building the Source
 --------------------------------------
 
