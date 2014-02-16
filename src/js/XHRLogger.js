@@ -74,7 +74,7 @@ XHRLogger.prototype.logCookies = function() {
  */
 XHRLogger.prototype.logToConsole = function(content, encoding) {
 	// group 1
-	Console.groupCollapsed("Network request: " + this.har.request.method + " \"" + this.har.request.url + "\"");
+	Console.groupCollapsed("Network request: " + this.har.request.method + " \"" + this.har.request.url + "\" took " + this.formatRequestTime(this.har.timings));
 
 	// group 2
 	this.logHeaders();
@@ -105,6 +105,27 @@ XHRLogger.prototype.logToConsole = function(content, encoding) {
 
 	Console.groupEnd();
 	// group 1
+};
+
+/**
+ * Format the request timings
+ */
+XHRLogger.prototype.formatRequestTime = function(timings) {
+	var total_ms = 0,
+		stage;
+	
+	for (stage in timings) {
+		if (!timings.hasOwnProperty(stage) || timings[stage] === -1 || stage === "ssl") {
+			continue;
+		}
+		total_ms += timings[stage];
+	}
+	
+	if (total_ms < 1000) {
+		return Math.round(total_ms) + "ms";
+	}
+	
+	return (total_ms / 1000).toFixed(2) + "s";
 };
 
 /**
