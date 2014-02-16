@@ -90,6 +90,20 @@ Request.prototype.request = {
 			value : "GH_ac_callback"
 		}
 	],
+	postData : {
+		mimeType : "multipart/form-data",
+		params : [
+			{
+				name : "paramName",
+				value : "paramValue",
+				fileName : "example.pdf",
+				contentType : "application/pdf",
+				comment : ""
+			}
+		],
+		text : "plain posted data",
+		comment : ""
+	},
 	cookies : [
 		{
 			name : "s",

@@ -18,7 +18,9 @@ Console.Type = {
 	ERROR : "error",
 	GROUP : "group",
 	GROUP_COLLAPSED : "groupCollapsed",
-	GROUP_END : "groupEnd"
+	GROUP_END : "groupEnd",
+	TABLE : "table",
+	COUNT : "count"
 };
 
 /**
