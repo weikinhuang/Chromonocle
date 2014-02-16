@@ -1,4 +1,4 @@
-[Chrome XHR Inspector]
+Chrome XHR Inspector
 ==================================================
 
 Chrome XHR Inspector adds expandable areas for XHR requests much like that in Firebug's console view.
@@ -28,6 +28,15 @@ Changelog
 
 #### v0.0.1
 	Base commits not working yet
+
+References
+--------------------------------------
+[Extending Devtools](http://developer.chrome.com/extensions/devtools.html)
+[chrome.devtools.network](http://developer.chrome.com/extensions/devtools_network.html)
+[Sample Extensions](http://developer.chrome.com/extensions/samples.html#devtools.network)
+[Hosting](http://developer.chrome.com/extensions/hosting.html)
+[Packaging](http://developer.chrome.com/extensions/packaging.html)
+[AutoUpdate](http://developer.chrome.com/extensions/autoupdate.html)
 
 About
 --------------------------------------
