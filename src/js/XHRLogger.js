@@ -7,11 +7,15 @@
  *
  * @constructor
  * @param {Request} request
+ * @param {String} content
+ * @param {String} contentEncoding
  * @see http://www.softwareishard.com/blog/har-12-spec/
  * @returns {XHRLogger}
  */
-function XHRLogger(request) {
+function XHRLogger(request, content, contentEncoding) {
 	this.har = request;
+	this.content = content;
+	this.contentEncoding = contentEncoding;
 }
 
 /**
@@ -72,7 +76,7 @@ XHRLogger.prototype.logCookies = function() {
 /**
  * Log data to the console
  */
-XHRLogger.prototype.logToConsole = function(content, encoding) {
+XHRLogger.prototype.logToConsole = function() {
 	// group 1
 	Console.groupCollapsed("Network request: " + this.har.request.method + " \"" + this.har.request.url + "\" took " + this.formatRequestTime(this.har.timings));
 
@@ -85,11 +89,11 @@ XHRLogger.prototype.logToConsole = function(content, encoding) {
 	// group 2
 	this.logCookies();
 
-	if (content) {
+	if (this.content) {
 		// group 2
-		if (encoding !== "base64") {
+		if (this.contentEncoding !== "base64") {
 			Console.groupCollapsed("Response");
-			Console.log(content);
+			Console.log(this.content);
 			Console.groupEnd();
 		}
 		// group 2
@@ -97,7 +101,7 @@ XHRLogger.prototype.logToConsole = function(content, encoding) {
 		// group 2
 		if (this.har.response.content.mimeType.match(/json|javascript/)) {
 			Console.group("JSON");
-			this.processJSON(content);
+			this.processJSON(this.content);
 			Console.groupEnd();
 		}
 		// group 2
@@ -109,22 +113,25 @@ XHRLogger.prototype.logToConsole = function(content, encoding) {
 
 /**
  * Format the request timings
+ *
+ * @param {Object} timings
+ * @returns {String}
  */
 XHRLogger.prototype.formatRequestTime = function(timings) {
 	var total_ms = 0,
 		stage;
-	
+
 	for (stage in timings) {
 		if (!timings.hasOwnProperty(stage) || timings[stage] === -1 || stage === "ssl") {
 			continue;
 		}
 		total_ms += timings[stage];
 	}
-	
+
 	if (total_ms < 1000) {
 		return Math.round(total_ms) + "ms";
 	}
-	
+
 	return (total_ms / 1000).toFixed(2) + "s";
 };
 
@@ -132,11 +139,7 @@ XHRLogger.prototype.formatRequestTime = function(timings) {
  * Parse and renders the request in the console
  */
 XHRLogger.prototype.log = function() {
-	if (this.har.response.bodySize > 0) {
-		this.har.getContent(XHRLogger.prototype.logToConsole.bind(this));
-	} else {
-		XHRLogger.prototype.logToConsole();
-	}
+	this.logToConsole();
 };
 
 /**
@@ -166,7 +169,6 @@ XHRLogger.prototype.processJSON = function(content) {
 			Console.log("for (;;); ", JSON.parse(cleanContent));
 			return;
 		}
-		return;
 	} catch (e) {
 	}
 };
@@ -201,6 +203,45 @@ XHRLogger.isXHR = function(request) {
 };
 
 /**
+ * Checks if request content body looks like JSON
+ *
+ * @param {String} content
+ * @param {String} contentEncoding
+ * @returns {Boolean}
+ */
+XHRLogger.isJSONLike = function(content, contentEncoding) {
+	if (contentEncoding === "base64") {
+		return false;
+	}
+	var cleanContent;
+	// plain json
+	try {
+		JSON.parse(content);
+		return true;
+	} catch (e) {
+	}
+	// jsonp
+	try {
+		cleanContent = /^\s*([^{]+)\(\s*(\{.+\})\s*\)\s*;?\s*$/.exec(content);
+		if (cleanContent) {
+			JSON.parse(cleanContent[2]);
+			return true;
+		}
+	} catch (e) {
+	}
+	// weird jsonp hack (fb)
+	try {
+		cleanContent = content.replace(/^\s*for\s*\(\s*;\s*;\s*\)\s*(\{\s*\}\s*)?;\s*/, "");
+		if (cleanContent) {
+			JSON.parse(cleanContent);
+			return true;
+		}
+	} catch (e) {
+	}
+	return false;
+};
+
+/**
  * Event listener for chrome.devtools.network.onRequestFinished.addListener
  *
  * @param {Request} request
@@ -208,10 +249,11 @@ XHRLogger.isXHR = function(request) {
  * @returns {XHRLogger}
  */
 XHRLogger.listen = function(request) {
-	if (!XHRLogger.isXHR(request)) {
-		return;
-	}
-	var logger = new XHRLogger(request);
-	logger.log();
-	return logger;
+	request.getContent(function(content, encoding) {
+		if (!XHRLogger.isXHR(request) && !XHRLogger.isJSONLike(content, encoding)) {
+			return;
+		}
+		var logger = new XHRLogger(request, content, encoding);
+		logger.log();
+	});
 };
