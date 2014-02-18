@@ -250,7 +250,7 @@ XHRLogger.isJSONLike = function(content, contentEncoding) {
  */
 XHRLogger.listen = function(request) {
 	request.getContent(function(content, encoding) {
-		if (!XHRLogger.isXHR(request) && !XHRLogger.isJSONLike(content, encoding)) {
+		if (!XHRLogger.isXHR(request) || !XHRLogger.isJSONLike(content, encoding)) {
 			return;
 		}
 		var logger = new XHRLogger(request, content, encoding);
