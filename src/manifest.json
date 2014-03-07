@@ -8,7 +8,7 @@
     "devtools_page": "devtools.html",
     "background": {
         "scripts": [
-            "js/background.js"
+            "js/chrome/background.js"
         ]
     },
     // "icons": {
