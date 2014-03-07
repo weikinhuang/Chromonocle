@@ -41,7 +41,7 @@ Changelog
 --------------------------------------
 
 #### v0.0.1
-	Base commits not working yet
+	Initial working version
 
 References
 --------------------------------------
