@@ -275,6 +275,9 @@ XHRLogger.isJSONLike = function(content, contentEncoding) {
  * @returns {XHRLogger}
  */
 XHRLogger.listen = function(request) {
+	if (localStorage.loggingEnabled === "false") {
+		return;
+	}
 	request.getContent(function(content, encoding) {
 		if (!XHRLogger.isXHR(request) || !XHRLogger.isJSONLike(content, encoding)) {
 			return;

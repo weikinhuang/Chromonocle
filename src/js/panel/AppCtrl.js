@@ -2,9 +2,9 @@
 "use strict";
 
 angular.module("chromeXhrInspector.controllers").controller("AppCtrl", [ function() {
-	this.loggingEnabled = true;
+	this.loggingEnabled = localStorage.loggingEnabled !== "false";
 
 	this.toggleLogging = function() {
-		// alert(String(this.loggingEnabled));
+		localStorage.loggingEnabled = String(this.loggingEnabled);
 	};
 } ]);
