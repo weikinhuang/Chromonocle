@@ -19,6 +19,32 @@ function XHRLogger(request, content, contentEncoding) {
 }
 
 /**
+ * RegExp to test if a url looks like a json request
+ * @type {RegExp}
+ */
+XHRLogger.JSON_REQUEST_REGEXP = /\.json(?:$|\?)/i;
+/**
+ * RegExp to test if a mimetype is json
+ * @type {RegExp}
+ */
+XHRLogger.JSON_MIMETYPE_REGEXP = /json/i;
+/**
+ * RegExp to test if a mimetype is javascript
+ * @type {RegExp}
+ */
+XHRLogger.JAVASCRIPT_MIMETYPE_REGEXP = /json|javascript/;
+/**
+ * RegExp to extract json from a jsonp response
+ * @type {RegExp}
+ */
+XHRLogger.JSONP_CONTENT_REGEXP = /^\s*([^{]+)\(\s*(\{.+\})\s*\)\s*;?\s*$/;
+/**
+ * RegExp to remove extraneous jsonp data
+ * @type {RegExp}
+ */
+XHRLogger.JSONP_CSP_CONTENT_REGEXP = /^\s*for\s*\(\s*;\s*;\s*\)\s*(\{\s*\}\s*)?;\s*/;
+
+/**
  * The internal xhr request
  *
  * @type {Request}
@@ -99,7 +125,7 @@ XHRLogger.prototype.logToConsole = function() {
 		// group 2
 
 		// group 2
-		if (this.har.response.content.mimeType.match(/json|javascript/)) {
+		if (XHRLogger.JAVASCRIPT_MIMETYPE_REGEXP.test(this.har.response.content.mimeType)) {
 			Console.group("JSON");
 			this.processJSON(this.content);
 			Console.groupEnd();
@@ -155,7 +181,7 @@ XHRLogger.prototype.processJSON = function(content) {
 	}
 	// jsonp
 	try {
-		cleanContent = /^\s*([^{]+)\(\s*(\{.+\})\s*\)\s*;?\s*$/.exec(content);
+		cleanContent = XHRLogger.JSONP_CONTENT_REGEXP.exec(content);
 		if (cleanContent) {
 			Console.log(cleanContent[1] + "(", JSON.parse(cleanContent[2]), ")");
 			return;
@@ -164,7 +190,7 @@ XHRLogger.prototype.processJSON = function(content) {
 	}
 	// weird jsonp hack (fb)
 	try {
-		cleanContent = content.replace(/^\s*for\s*\(\s*;\s*;\s*\)\s*(\{\s*\}\s*)?;\s*/, "");
+		cleanContent = content.replace(XHRLogger.JSONP_CSP_CONTENT_REGEXP, "");
 		if (cleanContent) {
 			Console.log("for (;;); ", JSON.parse(cleanContent));
 			return;
@@ -181,10 +207,10 @@ XHRLogger.prototype.processJSON = function(content) {
  * @todo This needs to be revised or allow selectable filter
  */
 XHRLogger.isXHR = function(request) {
-	if (request.request.url.match(/\.json(?:$|\?)/i)) {
+	if (XHRLogger.JSON_REQUEST_REGEXP.test(request.request.url)) {
 		return true;
 	}
-	if (request.response.content.mimeType.match(/json/i)) {
+	if (XHRLogger.JSON_MIMETYPE_REGEXP.test(request.response.content.mimeType)) {
 		return true;
 	}
 	if (request.request.headers.some(function(header) {
@@ -222,7 +248,7 @@ XHRLogger.isJSONLike = function(content, contentEncoding) {
 	}
 	// jsonp
 	try {
-		cleanContent = /^\s*([^{]+)\(\s*(\{.+\})\s*\)\s*;?\s*$/.exec(content);
+		cleanContent = XHRLogger.JSONP_CONTENT_REGEXP.exec(content);
 		if (cleanContent) {
 			JSON.parse(cleanContent[2]);
 			return true;
@@ -231,7 +257,7 @@ XHRLogger.isJSONLike = function(content, contentEncoding) {
 	}
 	// weird jsonp hack (fb)
 	try {
-		cleanContent = content.replace(/^\s*for\s*\(\s*;\s*;\s*\)\s*(\{\s*\}\s*)?;\s*/, "");
+		cleanContent = content.replace(XHRLogger.JSONP_CSP_CONTENT_REGEXP, "");
 		if (cleanContent) {
 			JSON.parse(cleanContent);
 			return true;
@@ -249,6 +275,9 @@ XHRLogger.isJSONLike = function(content, contentEncoding) {
  * @returns {XHRLogger}
  */
 XHRLogger.listen = function(request) {
+	if (localStorage.loggingEnabled === "false") {
+		return;
+	}
 	request.getContent(function(content, encoding) {
 		if (!XHRLogger.isXHR(request) || !XHRLogger.isJSONLike(content, encoding)) {
 			return;

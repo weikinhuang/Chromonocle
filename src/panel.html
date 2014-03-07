@@ -1,0 +1,22 @@
+<!doctype html>
+<html data-ng-app="chromeXhrInspector">
+<head>
+<title>Chrome XHR Inspector</title>
+</head>
+<body data-ng-controller="AppCtrl as app">
+
+<form>
+	<input type="checkbox"
+		id="logging-enabled-chk"
+		name="logging-enabled"
+		data-ng-model="app.loggingEnabled"
+		data-ng-change="app.toggleLogging()"
+	/> <label for="logging-enabled-chk">Enabled?</label>
+</form>
+
+<script src="vendor/angular/angular.min.js"></script>
+<script src="js/panel/app-panel.js"></script>
+<script src="js/panel/AppCtrl.js"></script>
+
+</body>
+</html>
