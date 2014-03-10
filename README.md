@@ -5,7 +5,7 @@ Chromonocle is an easy-to-use XHR (ajax) request inspector designed specifically
 It seamlessly brings the convenient XHR request inspecting functionality found in Firebug to the Chrome console. 
 Chromonocle allows developers to see all the important info about ajax requests without ever leaving the console tab.
 
-![Chrome XHR Inspector](https://github.com/weikinhuang/chrome-xhr-inspector/raw/master/img/screenshot.png)
+![Chromonocle](https://github.com/weikinhuang/Chromonocle/raw/master/img/967x439_screenshot.png)
 
 Building the Source
 --------------------------------------
