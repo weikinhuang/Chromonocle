@@ -8,10 +8,11 @@
   ],
   "noBinLinks": true,
   "devDependencies": {
-	"grunt": ">=0.4.2",
+    "grunt": ">=0.4.2",
     "grunt-contrib-jshint": ">=0.6.4",
     "grunt-contrib-watch": ">=0.5.0",
     "grunt-jscs-checker": ">=0.3.2",
-    "bower": "~1.2.8"
+    "bower": "~1.2.8",
+    "adm-zip": "^0.4.4"
   }
 }

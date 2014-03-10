@@ -57,6 +57,8 @@ About
 
 Chrome XHR Inspector copyright 2014 by [Wei Kin Huang](http://closedinterval.com/).
 
+Logo design by Tim Rogus.
+
 Build Tools: 
 [Grunt](https://github.com/cowboy/grunt),
 [JsHint](https://github.com/jshint/jshint),
