@@ -55,7 +55,7 @@ References
 About
 --------------------------------------
 
-Chrome XHR Inspector copyright 2014 by [Wei Kin Huang](http://closedinterval.com/).
+Chrome XHR Inspector copyright 2014 by [Wei Kin Huang](http://www.closedinterval.com/).
 
 Logo design by Tim Rogus.
 
