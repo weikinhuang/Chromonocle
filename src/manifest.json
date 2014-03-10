@@ -1,5 +1,5 @@
 {
-    "name": "Chrome XHR Inspector",
+    "name": "Chromonocle",
     "manifest_version": 2,
     "version": "0.0.1",
     "minimum_chrome_version": "20.0",
