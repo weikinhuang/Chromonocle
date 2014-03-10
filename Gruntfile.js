@@ -70,7 +70,7 @@ module.exports = function(grunt) {
 				{ expand: true, cwd: "img/", src: [ "icon128.png" ], dest: "images" },
 				{ expand: true, cwd: "src/", src: [ "js/**" ], dest: "" },
 				{ expand: true, cwd: "src/vendor/angular/", src: [ "angular.min.js" ], dest: "vendor/angular" },
-				{ expand: true, cwd: "src/vendor/q/", src: [ "q.js" ], dest: "vendor/q" },
+				{ expand: true, cwd: "src/vendor/q/", src: [ "q.js" ], dest: "vendor/q" }
 			]
 		}
 	};
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
 		archive.on("error", function(err) {
 			throw err;
 		});
-		archive.on("done", function(err) {
+		archive.on("done", function() {
 			done();
 		});
 
