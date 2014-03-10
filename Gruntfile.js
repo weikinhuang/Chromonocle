@@ -64,16 +64,14 @@ module.exports = function(grunt) {
 	gruntConfig.zip = {
 		all : {
 			output : "<%= pkg.name %>.zip",
-			files : {
-				"src/*.html" : "",
-				"src/manifest.json" : "",
-				"img/icon128.png" : "images",
-				"src/vendor/angular/angular.min.js" : "vendor/angular",
-				"src/vendor/q/q.js" : "vendor/q"
-			},
-			folders : {
-				"src/js" : "js"
-			}
+			files : [
+				{ expand: true, cwd: "src/", src: [ "*.html" ], dest: "" },
+				{ expand: true, cwd: "src/", src: [ "manifest.json" ], dest: "" },
+				{ expand: true, cwd: "img/", src: [ "icon128.png" ], dest: "images" },
+				{ expand: true, cwd: "src/", src: [ "js/**" ], dest: "" },
+				{ expand: true, cwd: "src/vendor/angular/", src: [ "angular.min.js" ], dest: "vendor/angular" },
+				{ expand: true, cwd: "src/vendor/q/", src: [ "q.js" ], dest: "vendor/q" },
+			]
 		}
 	};
 
@@ -83,22 +81,26 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-watch");
 
 	grunt.registerMultiTask("zip", "Create zip file for upload to Chrome App Store.", function() {
-		var AdmZip = require("adm-zip"),
-			zip = new AdmZip(),
-			folders = this.data.folders,
-			files = this.data.files;
+		var fs = require("fs"),
+			archiver = require("archiver"),
+			done = this.async(),
+			archive = archiver("zip"),
+			output = fs.createWriteStream(this.data.output);
 
-		Object.keys(folders).forEach(function(folderMatch) {
-			grunt.file.expand(folderMatch).forEach(function(folder) {
-				zip.addLocalFolder(folder, folders[folderMatch]);
-			});
+		output.on("close", function() {
+			console.log("archiver has been finalized: " + archive.pointer() + " bytes written");
 		});
-		Object.keys(files).forEach(function(fileMatch) {
-			grunt.file.expand(fileMatch).forEach(function(file) {
-				zip.addLocalFile(file, files[fileMatch]);
-			});
+
+		archive.on("error", function(err) {
+			throw err;
 		});
-		zip.writeZip(this.data.output);
+		archive.on("done", function(err) {
+			done();
+		});
+
+		archive.pipe(output);
+		archive.bulk(this.data.files);
+		archive.finalize();
 	});
 
 	// Default grunt
