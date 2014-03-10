@@ -1,4 +1,4 @@
-Chromonocle
+[Chromonocle](https://chrome.google.com/webstore/detail/chromonocle/mfmekffkgoeakflgdpihmamhbajmpdfl)
 ==================================================
 
 Chromonocle is an easy-to-use XHR (ajax) request inspector designed specifically for Chrome. 
