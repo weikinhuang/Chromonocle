@@ -1,15 +1,16 @@
-Chrome XHR Inspector
+Chromonocle
 ==================================================
 
-Chrome XHR Inspector adds expandable areas for XHR requests much like that in Firebug's console view.
-Skips a panel change where XHR request details can be seen inline in the Chrome console
+Chromonocle is an easy-to-use XHR (ajax) request inspector designed specifically for Chrome. 
+It seamlessly brings the convenient XHR request inspecting functionality found in Firebug to the Chrome console. 
+Chromonocle allows developers to see all the important info about ajax requests without ever leaving the console tab.
 
 ![Chrome XHR Inspector](https://github.com/weikinhuang/chrome-xhr-inspector/raw/master/img/screenshot.png)
 
 Building the Source
 --------------------------------------
 
-Chrome XHR Inspector uses the [grunt](https://github.com/cowboy/grunt) build system.
+Chromonocle uses the [grunt](https://github.com/cowboy/grunt) build system.
 
 ```bash
 # Install grunt.
@@ -55,7 +56,7 @@ References
 About
 --------------------------------------
 
-Chrome XHR Inspector copyright 2014 by [Wei Kin Huang](http://www.closedinterval.com/).
+Chromonocle copyright 2014 by [Wei Kin Huang](http://www.closedinterval.com/).
 
 Logo design by Tim Rogus.
 
